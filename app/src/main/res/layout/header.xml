@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".Activity.ListActivity">
+
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colorPrimaryTheme">
+
+        <ImageView
+            android:id="@+id/togg"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/tab_indi"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:onClick="togg"
+            android:padding="10dp"
+            android:src="@drawable/trending_icon_black"
+            android:tag="close" />
+
+
+
+
+        <TextView
+            android:id="@+id/app_name_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:paddingLeft="10dp"
+            android:text="One App"
+            android:textStyle="bold"
+            android:textColor="@color/colorSecondaryTheme"
+            android:textSize="16dp"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/search_ll"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/white_bg"
+            android:gravity="center"
+            android:padding="2dp"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/search_button"
+                android:layout_width="20dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:onClick="searchBut"
+                android:paddingLeft="3dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/black_search" />
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textCursorDrawable="@drawable/black_cursor"
+                android:background="@drawable/apptheme_edit_text_holo_light"
+                android:gravity="left|center"
+                android:hint="One Search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/close_button"
+                android:layout_width="20dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:onClick="closeAll"
+                android:paddingLeft="5dp"
+                android:paddingRight="3dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/close" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/search_anim"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/search_icon_black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimaryTheme">
+
+            <ImageView
+                android:id="@+id/mapp"
+                android:layout_width="40dp"
+                android:layout_height="45dp"
+                android:background="@drawable/tab_indi"
+                android:clickable="true"
+                android:onClick="mapp"
+                android:padding="10dp"
+                android:src="@drawable/lock"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:id="@+id/customize"
+                android:padding="5dp"
+                android:src="@drawable/add_icon_black" />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="refresh"
+                android:padding="5dp"
+                android:src="@drawable/refresh_icon_black" />
+            <ImageView
+                android:layout_width="35dp"
+                android:id="@+id/share"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="share"
+                android:padding="5dp"
+                android:src="@drawable/share_icon_black" />
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="home"
+                android:padding="5dp"
+                android:src="@drawable/home_icon_black" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">1-One App</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_splash">Splash</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_tab">TabActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="cat">Categories</string>
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="most_visted"><u>Trending around you!</u></string>
+    <string name="category_select_text"><u>Category</u></string>
+    <string name="category_unselect_text">Category</string>
+    <string name="trending_select_text"><u>Trending</u></string>
+    <string name="trending_unselect_text">Trending</string>
+    <string name="skip_text"><u>Skip and Shop</u></string>
+
+    <string name="search_cat1">Shop</string>
+
+    <string name="search_cat2">Search</string>
+
+    <string name="search_cat3">Fashion</string>
+
+    <string name="search_cat4">News</string>
+
+</resources>

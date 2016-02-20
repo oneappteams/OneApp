@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+    <mind.com.oneapp.Framework.ObservableWebView
+        android:id="@+id/webPast"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:visibility="gone" />
+    <mind.com.oneapp.Framework.ObservableWebView
+        android:id="@+id/webPresent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+    <ProgressBar
+        android:id="@+id/progressBarHorizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="-9dp"
+        android:layout_alignParentTop="true"
+        />
+    <LinearLayout
+        android:id="@+id/tapRetryLinear"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+
+
+        <TextView
+            android:id="@+id/tapToRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Looks like something is messed up, Please refresh"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+            android:layout_marginLeft="2dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/retry_icon" />
+    </LinearLayout>
+</RelativeLayout>

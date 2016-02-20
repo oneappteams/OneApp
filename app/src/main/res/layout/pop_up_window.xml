@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/PopUpView"
+    android:layout_width="170dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:layout_gravity="right"
+    android:background="@color/colorPrimaryTheme">
+<View
+    android:layout_width="170dp"
+    android:layout_height="1dp"
+    android:background="@color/colorSecondaryTheme"/>
+	<ListView android:id="@+id/dropDownList"
+	    android:layout_width="170dp"
+	    android:layout_height="wrap_content"
+	    android:divider="@color/colorSecondaryTheme"
+	    android:dividerHeight="0.5dp"></ListView>
+    <Button
+        android:layout_width="170dp"
+        android:layout_height="35dp"
+        android:id="@+id/select_btn"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimaryOrange"
+        android:text="OK"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textColor="#fff" />
+</LinearLayout>
