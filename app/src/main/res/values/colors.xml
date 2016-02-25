@@ -6,4 +6,5 @@
     <color name="colorPrimaryOrange">#ff6600</color>
     <color name="black">#000000</color>
 <color name="welcomeoffertext">#000000</color>
+    <color name="selectedtrend">#333333</color>
 </resources>

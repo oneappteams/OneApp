@@ -2,11 +2,13 @@ package mind.com.oneapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import com.flurry.android.FlurryAgent;
 import com.quantumgraph.sdk.QG;
 
+import mind.com.oneapp.Activity.MainActivity;
 import mind.com.oneapp.AppConstants.Utils;
 
 //import com.quantumgraph.sdk.QG;
@@ -59,6 +61,14 @@ public class SearchApplication extends Application {
             QG qg = QG.getInstance(getApplicationContext());
             qg.onStart("d8a414c455855970de8f");
             qg.setTracking(true, true, true);
+
+            SharedPreferences sharedpreferences = getSharedPreferences(
+                    MainActivity.My_preference, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putBoolean("HomeActivityFirst", true);
+            editor.commit();
+            editor.putInt("trendingCatPos", 0);
+            editor.commit();
         } catch (Exception e) {
         }
     }
@@ -76,5 +86,11 @@ public class SearchApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean("HomeActivityFirst",false);
+        editor.commit();
     }
 }

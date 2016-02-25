@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -77,6 +76,8 @@ public class HomeActivity extends Activity {
 
     TextView treningTv;
     TextView categoryTv;
+    TextView trendingTvLine;
+    TextView trendingTvLine2;
     LinearLayout trendingListLl;
     LinearLayout trendingItemLl;
     LinearLayout skipLl;
@@ -133,6 +134,11 @@ public class HomeActivity extends Activity {
 
         treningTv = (TextView) findViewById(R.id.trending_tv);
         categoryTv = (TextView) findViewById(R.id.category_tv);
+                //
+        trendingTvLine = (TextView) findViewById(R.id.trending_tv_line);
+        trendingTvLine2 = (TextView) findViewById(R.id.trending_tv_line_2);
+        trendingTvLine.setVisibility(View.VISIBLE);
+        trendingTvLine2.setVisibility(View.INVISIBLE);
         trendingListLl = (LinearLayout) findViewById(R.id.trending_list_ll);
         trendingItemLl = (LinearLayout) findViewById(R.id.trending_item_ll);
         skipLl = (LinearLayout) findViewById(R.id.skip_ll);
@@ -153,8 +159,8 @@ public class HomeActivity extends Activity {
         textCatFour.setText(Html.fromHtml("" + textCatSFour + ""));
         search.setHint("1-search: across Amazon, Flipkart etc..,");
 
-        categoryTv.setPaintFlags(0);
-        treningTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+       /* categoryTv.setPaintFlags(0);
+        treningTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);*/
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.myRadioGroup);
         selectedSearchName = ((RadioButton) findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
 
@@ -208,21 +214,22 @@ public class HomeActivity extends Activity {
         treningTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trendingTvLine.setVisibility(View.VISIBLE);
+                trendingTvLine2.setVisibility(View.INVISIBLE);
                 trending(null, 0);
             }
         });
 
         // Basic Yozio initialization
         //  Yozio.initialize(this);
-        try {
-/*            Intent intent = this.getIntent();
-            Uri data = intent.getData();
-            if (data != null) {
-                String strData = data.toString();
-                parseLink(strData);*/
 
-            //}
+/*            SharedPreferences sharedpreferences = getSharedPreferences(
+                    MainActivity.My_preference, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putBoolean("HomeActivityFirst",true);
+            editor.commit();
             try {
+
                 Intent intent = this.getIntent();
                 Uri data = intent.getData();
                 if (data != null) {
@@ -233,17 +240,39 @@ public class HomeActivity extends Activity {
                 }
             } catch (Exception e) {
 
-            }
+            }*/
 
+        try {
+
+        //    if(sharedpreferences.getBoolean("HomeActivityFirst",true)) {
+                /*editor.putBoolean("HomeActivityFirst",false);
+                editor.commit();*/
+                Intent intent = this.getIntent();
+                Uri data = intent.getData();
+                if (data != null) {
+                    String strData = data.toString();
+                    parseLink(strData);
+                } else {
+                    trending(null, 0);
+                }
+          //  }
         } catch (Exception e) {
 
+
         }
+
+
         trengingLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RowData rowData = (RowData) parent.getItemAtPosition(position);
                 String path = rowData.getUrl();
                 parseLink(path);
+                SharedPreferences sharedpreferences = getSharedPreferences(
+                        MainActivity.My_preference, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putInt("trendingCatInnerPos",position);
+                editor.commit();
             }
         });
         //  Toast.makeText(getApplicationContext(), deepLinkCategory + "", Toast.LENGTH_SHORT).show();
@@ -263,15 +292,51 @@ public class HomeActivity extends Activity {
         // i.putExtra("STRING_I_NEED", strName);
 
         sendData();
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("tabPosition", position);
         intent.putExtra("tabCategoryPosition", categoryPosition);
         intent.putExtra("tabSearchUrl", searchUrl);
         intent.putExtra("tabSearchText", search.getText().toString());
         startActivity(intent);
-       // finish();
+        finish();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        /*try {
+            SharedPreferences sharedpreferences = getSharedPreferences(
+                    MainActivity.My_preference, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+           if(sharedpreferences.getBoolean("HomeActivityFirst",true)) {
+               editor.putBoolean("HomeActivityFirst",false);
+               editor.commit();
+               Intent intent = this.getIntent();
+               Uri data = intent.getData();
+               if (data != null) {
+                   String strData = data.toString();
+                   parseLink(strData);
+               } else {
+                   trending(null, 0);
+               }
+           }
+        } catch (Exception e) {
+
+
+        }*/
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+/*        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean("HomeActivityFirst",false);
+                editor.commit();*/
+    }
 
     public void Skip(View view) {
 
@@ -448,6 +513,541 @@ public class HomeActivity extends Activity {
     }
 
 
+
+
+    public void trending(View view, final int trendCategoryPosition) {
+        try {
+            if (Utils.isNetworkAvailable(this)) {
+                treningTv.setEnabled(false);
+                categoryTv.setEnabled(true);
+
+                try {
+                    SharedPreferences sharedpreferences = getSharedPreferences(
+                            MainActivity.My_preference, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    if(sharedpreferences.getBoolean("HomeActivityFirst",true)) {
+                        emptyProgress.setVisibility(View.VISIBLE);
+                        editor.putBoolean("HomeActivityFirst", false);
+                        editor.commit();
+                        trendingOverAll(null);
+                        new DownloadTrendingDataTask(new AsyncResult() {
+                            @Override
+                            public void onResult(JSONObject object) {
+                                processJson(object, trendCategoryPosition);
+                                emptyProgress.setVisibility(View.GONE);
+                            }
+                        }).execute(Utils.trendingSheet);
+                    }
+                    else{
+                            switch (sharedpreferences.getInt("trendingCatPos",0)) {
+                                case 0:
+                                    trendingOverAll(null);
+                                    break;
+                                case 1:
+                                    trendingNews(null);
+                                    break;
+                                case 2:
+                                    trendingShoppingDeals(null);
+                                    break;
+                                case 3:
+                                    trendingTravel(null);
+                                    break;
+                                case 4:
+                                    trendingMovies(null);
+                                    break;
+                                case 5:
+                                    trendingEatOrRestaurant(null);
+                                    break;
+                                default:
+                                    trendingOverAll(null);
+                                    break;
+
+                        }
+
+                        try {
+                            trengingLv.smoothScrollToPosition(sharedpreferences.getInt("trendingCatInnerPos", 0));
+                        }catch (Exception e){
+
+                        }
+                       // editor.commit();
+                    }
+                } catch (Exception e) {
+
+
+                }
+
+
+                /*categoryTv.setPaintFlags(0);
+                treningTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);*/
+                introGvLl.setVisibility(View.GONE);
+                skipLl.setVisibility(View.GONE);
+                trendingListLl.setVisibility(View.VISIBLE);
+                trendingItemLl.setVisibility(View.VISIBLE);
+            } else {
+                emptyProgress.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),
+                        "Please check your internet connection and try again.", Toast.LENGTH_LONG)
+                        .show();
+                category(null);
+            }
+        } catch (Exception e) {
+            emptyProgress.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(),
+                    "Something went wrong, Please try again.", Toast.LENGTH_LONG)
+                    .show();
+            category(null);
+        }
+
+    }
+
+    public void category(View view) {
+        treningTv.setEnabled(true);
+        categoryTv.setEnabled(false);
+        /*categoryTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        treningTv.setPaintFlags(0);*/
+        introGvLl.setVisibility(View.VISIBLE);
+        skipLl.setVisibility(View.VISIBLE);
+        trendingListLl.setVisibility(View.GONE);
+        trendingItemLl.setVisibility(View.GONE);
+        trendingTvLine.setVisibility(View.INVISIBLE);
+        trendingTvLine2.setVisibility(View.VISIBLE);
+
+    }
+
+    public void trendingOverAll(View views) {
+        try {
+            resetTrendingBg();
+            // trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            trendingAll.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+            trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+            Utils.trendingCategory = "OverAll";
+            treningTv.setText("Trending");
+            rowData.clear();
+            rowData = db.getTrendingData(Utils.trendingCategory);
+            trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+            trengingLv.setAdapter(trendingAdapter);
+            if (trendingAdapter != null)
+                trendingAdapter.notifyDataSetChanged();
+
+            SharedPreferences sharedpreferences = getSharedPreferences(
+                    MainActivity.My_preference, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putInt("trendingCatPos", 0);
+            editor.commit();
+
+            //trengingLv.smoothScrollToPosition(sharedpreferences.getInt("trendingCatInnerPos",0));
+        }catch (Exception e){
+
+        }
+    }
+
+    public void trendingNews(View view) {
+        resetTrendingBg();
+        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingNews.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+        trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+
+        Utils.trendingCategory = "News";
+        treningTv.setText("News Trending");
+        rowData.clear();
+        rowData = db.getTrendingData(Utils.trendingCategory);
+        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+        trengingLv.setAdapter(trendingAdapter);
+        if (trendingAdapter != null)
+            trendingAdapter.notifyDataSetChanged();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("trendingCatPos",1);
+        editor.commit();
+
+    }
+
+    public void trendingShoppingDeals(View view) {
+        resetTrendingBg();
+        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingShopping.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+        trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+
+        Utils.trendingCategory = "Shopping Deals";
+        treningTv.setText("Shopping Trending");
+        rowData.clear();
+        rowData = db.getTrendingData(Utils.trendingCategory);
+        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+        trengingLv.setAdapter(trendingAdapter);
+        if (trendingAdapter != null)
+            trendingAdapter.notifyDataSetChanged();
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("trendingCatPos",2);
+        editor.commit();
+    }
+
+    public void trendingTravel(View view) {
+        resetTrendingBg();
+        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingTravel.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+        trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+
+        Utils.trendingCategory = "Travel";
+        treningTv.setText("Travel Trending");
+        rowData.clear();
+        rowData = db.getTrendingData(Utils.trendingCategory);
+        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+        trengingLv.setAdapter(trendingAdapter);
+        if (trendingAdapter != null)
+            trendingAdapter.notifyDataSetChanged();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("trendingCatPos",3);
+        editor.commit();
+    }
+
+    public void trendingMovies(View view) {
+        resetTrendingBg();
+        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingMovies.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+
+        Utils.trendingCategory = "Movies";
+        treningTv.setText("Movies Trending");
+        rowData.clear();
+        rowData = db.getTrendingData(Utils.trendingCategory);
+        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+        trengingLv.setAdapter(trendingAdapter);
+        if (trendingAdapter != null)
+            trendingAdapter.notifyDataSetChanged();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("trendingCatPos",4);
+        editor.commit();
+    }
+
+    public void trendingEatOrRestaurant(View view) {
+        resetTrendingBg();
+        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
+        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
+        Utils.trendingCategory = "Restaurant";
+        treningTv.setText("Restaurant Trending");
+        rowData.clear();
+        rowData = db.getTrendingData(Utils.trendingCategory);
+        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
+        trengingLv.setAdapter(trendingAdapter);
+        if (trendingAdapter != null)
+            trendingAdapter.notifyDataSetChanged();
+    }
+
+    private void processJson(JSONObject object, int trendCategoryPosition) {
+
+        try {
+            JSONArray rows = object.getJSONArray("rows");
+            if (!rowData.isEmpty()) {
+                rowData.clear();
+            }
+            for (int r = 1; r < rows.length(); r++) {
+                JSONObject row = rows.getJSONObject(r);
+                JSONArray columns = row.getJSONArray("c");
+
+                String category = columns.getJSONObject(0).optString("v");
+                String title = columns.getJSONObject(1).optString("v");
+                String subTitle = columns.getJSONObject(2).optString("v");
+                String url = columns.getJSONObject(3).optString("v");
+
+                RowData rowitem = new RowData(category, title, subTitle, url);
+
+                rowData.add(rowitem);
+            }
+            db.insertTrendingData(rowData);
+            //  trendingOverAll(null);
+
+            try {
+              /*  Intent intent = this.getIntent();
+                Uri data = intent.getData();
+                if (data == null) {
+                    trendingOverAll(null);
+                }
+                else{*/
+
+
+
+                switch (trendCategoryPosition) {
+                    case 0:
+                        trendingOverAll(null);
+                        break;
+                    case 1:
+                        trendingNews(null);
+                        break;
+                    case 2:
+                        trendingShoppingDeals(null);
+                        break;
+                    case 3:
+                        trendingTravel(null);
+                        break;
+                    case 4:
+                        trendingMovies(null);
+                        break;
+                    case 5:
+                        trendingEatOrRestaurant(null);
+                        break;
+                    default:
+                        trendingOverAll(null);
+                        break;
+                }
+                //  }
+
+            } catch (Exception e) {
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> items = new ArrayList<String>();
+
+    public void parseLink(String path) {
+        try {
+            String deepLinkCategory = "Home";
+            String[] dataParts = path.split("/deeplinking/");
+            String deepLinkCategoryParts = dataParts[1]; //idStr; //dataParts[1];
+            String[] parts = null;
+            if (deepLinkCategoryParts != null) {
+                parts = deepLinkCategoryParts.split("/");
+            }
+            if (parts[0] != null) {
+                deepLinkCategory = parts[0];
+                if (deepLinkCategory.equalsIgnoreCase("trending")) {
+                    int trendCategoryPosition = Integer.parseInt(parts[1]);
+                   // setTabAllSelected(trendCategoryPosition);
+                    trending(null, trendCategoryPosition);
+                } else {
+                    String deepLinkUrl = null;
+                    if (parts.length >= 3) {
+                        tabCategoryPosition = Integer.parseInt(parts[1]);
+                        for (int i = 3; i < parts.length; i++) {
+//                            deepLinkUrl = parts[2]+"/";
+                            if (i == 3) {
+                                deepLinkUrl = parts[2];
+                                deepLinkUrl = deepLinkUrl + "/" + parts[i];
+                            } else {
+                                deepLinkUrl = deepLinkUrl + "/" + parts[i];
+                            }
+                        }
+//                        deepLinkUrl = parts[2];
+                    } else if (parts.length == 2) {
+                        tabCategoryPosition = Integer.parseInt(parts[1]);
+                        deepLinkUrl = null;
+                    } else {
+                        tabCategoryPosition = -1;
+                        deepLinkUrl = null;
+                    }
+
+                  //  setTabAllSelected(tabCategoryPosition);
+                    for (int i = 0; i < Utils.totalCategories().size(); i++) {
+                        String category = Utils.totalCategories().get(i).replaceAll("\\s", "");
+                        if (deepLinkCategory.equalsIgnoreCase(category)) {
+                            setTabAllSelected(i);
+
+                            switch (i + 1) {
+
+                                case 1:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList1());
+
+                                    break;
+                                case 2:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList2());
+                                    break;
+                                case 3:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList3());
+                                    break;
+                                case 4:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList4());
+                                    break;
+                                case 5:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList5());
+                                    break;
+                                case 6:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList6());
+                                    break;
+                                case 7:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList7());
+                                    break;
+                                case 8:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList8());
+                                    break;
+                                case 9:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList9());
+                                    break;
+                                case 10:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList10());
+                                    break;
+                                case 11:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList11());
+                                    break;
+                                case 12:
+                                    items = new ArrayList<String>();
+                                    items.addAll(Utils.getList12());
+                                    break;
+
+                            }
+                            SharedPreferences sharedpreferences = getSharedPreferences(
+                                    MainActivity.My_preference, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                          //  String urlTotal = sharedpreferences.getString(items.get(tabCategoryPosition).toLowerCase(), "");
+                          //  if(urlTotal.equals("")){
+                            String    urlTotal =  deepLinkUrl;
+                           // }else {
+                              //  urlTotal += "_tokenizer_url:::search_app_" + deepLinkUrl;
+                            //}
+                            editor.putString(items.get(tabCategoryPosition).toLowerCase(), deepLinkUrl);
+                            editor.commit();
+                            goTabWebActivity(i, tabCategoryPosition, null);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void resetTrendingBg() {
+        trendingAll.setBackgroundColor(Color.BLACK);
+        trendingNews.setBackgroundColor(Color.BLACK);
+        trendingShopping.setBackgroundColor(Color.BLACK);
+        trendingTravel.setBackgroundColor(Color.BLACK);
+        trendingMovies.setBackgroundColor(Color.BLACK);
+        trendingRestaurent.setBackgroundColor(Color.BLACK);
+    }
+
+    public void setTabAllSelected(int tabCategoryPosition){
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        switch (tabCategoryPosition ){
+            case 0:
+                editor.putString("tab11", "true");
+                editor.putString("tab12", "true");
+                editor.putString("tab13", "true");
+                editor.putString("tab14", "true");
+                editor.putString("tab15", "true");
+                editor.putString("tab16", "true");
+                break;
+            case 1:
+                editor.putString("tab21", "true");
+                editor.putString("tab22", "true");
+                editor.putString("tab23", "true");
+                editor.putString("tab24", "true");
+                editor.putString("tab25", "true");
+                editor.putString("tab26", "true");
+                break;
+            case 2:
+                editor.putString("tab31", "true");
+                editor.putString("tab32", "true");
+                editor.putString("tab33", "true");
+                editor.putString("tab34", "true");
+                editor.putString("tab35", "true");
+                break;
+            case 3:
+                editor.putString("tab41", "true");
+                editor.putString("tab42", "true");
+                editor.putString("tab43", "true");
+                editor.putString("tab44", "true");
+                editor.putString("tab45", "true");
+                editor.putString("tab46", "true");
+                break;
+            case 4:
+                editor.putString("tab51", "true");
+                editor.putString("tab52", "true");
+                editor.putString("tab53", "true");
+                editor.putString("tab54", "true");
+                break;
+            case 5:
+                editor.putString("tab61", "true");
+                editor.putString("tab62", "true");
+                editor.putString("tab63", "true");
+                break;
+            case 6:
+                editor.putString("tab71", "true");
+                editor.putString("tab72", "true");
+                editor.putString("tab73", "true");
+                break;
+            case 7:
+                editor.putString("tab81", "true");
+                editor.putString("tab82", "true");
+                editor.putString("tab83", "true");
+                editor.putString("tab84", "true");
+                break;
+            case 8:
+                editor.putString("tab91", "true");
+                editor.putString("tab92", "true");
+                editor.putString("tab93", "true");
+                editor.putString("tab94", "true");
+                editor.putString("tab96", "true");
+                break;
+            case 9:
+                editor.putString("tab101", "true");
+                editor.putString("tab102", "true");
+                editor.putString("tab103", "true");
+                editor.putString("tab104", "true");
+                editor.putString("tab105", "true");
+                break;
+            case 10:
+                editor.putString("tab111", "true");
+                editor.putString("tab112", "true");
+                editor.putString("tab113", "true");
+                editor.putString("tab114", "true");
+                break;
+            case 11:
+                editor.putString("tab121", "true");
+                editor.putString("tab122", "true");
+                editor.putString("tab123", "true");
+                editor.putString("tab124", "true");
+
+            }
+
+            editor.commit();
+
+    }
+
     public void sendData() {
         SharedPreferences sharedpreferences = getSharedPreferences(
                 MainActivity.My_preference, Context.MODE_PRIVATE);
@@ -508,330 +1108,5 @@ public class HomeActivity extends Activity {
         editor.commit();
        /* startActivity(intent);
         finish();*/
-    }
-
-    public void trending(View view, final int trendCategoryPosition) {
-        try {
-            if (Utils.isNetworkAvailable(this)) {
-                treningTv.setEnabled(false);
-                categoryTv.setEnabled(true);
-                emptyProgress.setVisibility(View.VISIBLE);
-
-                new DownloadTrendingDataTask(new AsyncResult() {
-                    @Override
-                    public void onResult(JSONObject object) {
-                        processJson(object, trendCategoryPosition);
-                        emptyProgress.setVisibility(View.GONE);
-                    }
-                }).execute(Utils.trendingSheet);
-
-                categoryTv.setPaintFlags(0);
-                treningTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                introGvLl.setVisibility(View.GONE);
-                skipLl.setVisibility(View.GONE);
-                trendingListLl.setVisibility(View.VISIBLE);
-                trendingItemLl.setVisibility(View.VISIBLE);
-            } else {
-                emptyProgress.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),
-                        "Please check your internet connection and try again.", Toast.LENGTH_LONG)
-                        .show();
-                category(null);
-            }
-        } catch (Exception e) {
-            emptyProgress.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(),
-                    "Something went wrong, Please try again.", Toast.LENGTH_LONG)
-                    .show();
-            category(null);
-        }
-
-    }
-
-    public void category(View view) {
-        treningTv.setEnabled(true);
-        categoryTv.setEnabled(false);
-        categoryTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        treningTv.setPaintFlags(0);
-        introGvLl.setVisibility(View.VISIBLE);
-        skipLl.setVisibility(View.VISIBLE);
-        trendingListLl.setVisibility(View.GONE);
-        trendingItemLl.setVisibility(View.GONE);
-
-    }
-
-    public void trendingOverAll(View views) {
-        resetTrendingBg();
-        trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-
-        Utils.trendingCategory = "OverAll";
-        treningTv.setText("Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    public void trendingNews(View view) {
-        resetTrendingBg();
-        trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-
-        Utils.trendingCategory = "News";
-        treningTv.setText("News Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    public void trendingShoppingDeals(View view) {
-        resetTrendingBg();
-        trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-
-        Utils.trendingCategory = "Shopping Deals";
-        treningTv.setText("Shopping Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    public void trendingTravel(View view) {
-        resetTrendingBg();
-        trendingTravel.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-
-        Utils.trendingCategory = "Travel";
-        treningTv.setText("Travel Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    public void trendingMovies(View view) {
-        resetTrendingBg();
-        trendingMovies.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-
-        Utils.trendingCategory = "Movies";
-        treningTv.setText("Movies Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    public void trendingEatOrRestaurant(View view) {
-        resetTrendingBg();
-        trendingRestaurent.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
-        Utils.trendingCategory = "Restaurant";
-        treningTv.setText("Restaurant Trending");
-        rowData.clear();
-        rowData = db.getTrendingData(Utils.trendingCategory);
-        trendingAdapter = new TrendingAdapter(this, R.layout.trends, rowData);
-        trengingLv.setAdapter(trendingAdapter);
-        if (trendingAdapter != null)
-            trendingAdapter.notifyDataSetChanged();
-    }
-
-    private void processJson(JSONObject object, int trendCategoryPosition) {
-
-        try {
-            JSONArray rows = object.getJSONArray("rows");
-            if (!rowData.isEmpty()) {
-                rowData.clear();
-            }
-            for (int r = 1; r < rows.length(); r++) {
-                JSONObject row = rows.getJSONObject(r);
-                JSONArray columns = row.getJSONArray("c");
-
-                String category = columns.getJSONObject(0).optString("v");
-                String title = columns.getJSONObject(1).optString("v");
-                String subTitle = columns.getJSONObject(2).optString("v");
-                String url = columns.getJSONObject(3).optString("v");
-
-                RowData rowitem = new RowData(category, title, subTitle, url);
-
-                rowData.add(rowitem);
-            }
-            db.insertTrendingData(rowData);
-            //  trendingOverAll(null);
-
-            try {
-              /*  Intent intent = this.getIntent();
-                Uri data = intent.getData();
-                if (data == null) {
-                    trendingOverAll(null);
-                }
-                else{*/
-                switch (trendCategoryPosition) {
-                    case 0:
-                        trendingOverAll(null);
-                        break;
-                    case 1:
-                        trendingNews(null);
-                        break;
-                    case 2:
-                        trendingShoppingDeals(null);
-                        break;
-                    case 3:
-                        trendingTravel(null);
-                        break;
-                    case 4:
-                        trendingMovies(null);
-                        break;
-                    case 5:
-                        trendingEatOrRestaurant(null);
-                        break;
-                    default:
-                        trendingOverAll(null);
-                        break;
-                }
-                //  }
-
-            } catch (Exception e) {
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<String> items = new ArrayList<String>();
-
-    public void parseLink(String path) {
-        try {
-            String deepLinkCategory = "Home";
-            String[] dataParts = path.split("/deeplinking/");
-            String deepLinkCategoryParts = dataParts[1]; //idStr; //dataParts[1];
-            String[] parts = null;
-            if (deepLinkCategoryParts != null) {
-                parts = deepLinkCategoryParts.split("/");
-            }
-            if (parts[0] != null) {
-                deepLinkCategory = parts[0];
-                if (deepLinkCategory.equalsIgnoreCase("trending")) {
-                    int trendCategoryPosition = Integer.parseInt(parts[1]);
-                    trending(null, trendCategoryPosition);
-
-
-                } else {
-                    String deepLinkUrl = null;
-                    if (parts.length >= 3) {
-                        tabCategoryPosition = Integer.parseInt(parts[1]);
-                        for (int i = 3; i < parts.length; i++) {
-//                            deepLinkUrl = parts[2]+"/";
-                            if (i == 3) {
-                                deepLinkUrl = parts[2];
-                                deepLinkUrl = deepLinkUrl + "/" + parts[i];
-                            } else {
-                                deepLinkUrl = deepLinkUrl + "/" + parts[i];
-                            }
-                        }
-//                        deepLinkUrl = parts[2];
-                    } else if (parts.length == 2) {
-                        tabCategoryPosition = Integer.parseInt(parts[1]);
-                        deepLinkUrl = null;
-                    } else {
-                        tabCategoryPosition = -1;
-                        deepLinkUrl = null;
-                    }
-
-
-                    for (int i = 0; i < Utils.totalCategories().size(); i++) {
-                        String category = Utils.totalCategories().get(i).replaceAll("\\s", "");
-                        if (deepLinkCategory.equalsIgnoreCase(category)) {
-
-
-                            switch (i + 1) {
-
-                                case 1:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList1());
-                                    break;
-                                case 2:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList2());
-                                    break;
-                                case 3:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList3());
-                                    break;
-                                case 4:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList4());
-                                    break;
-                                case 5:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList5());
-                                    break;
-                                case 6:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList6());
-                                    break;
-                                case 7:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList7());
-                                    break;
-                                case 8:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList8());
-                                    break;
-                                case 9:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList9());
-                                    break;
-                                case 10:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList10());
-                                    break;
-                                case 11:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList11());
-                                    break;
-                                case 12:
-                                    items = new ArrayList<String>();
-                                    items.addAll(Utils.getList12());
-                                    break;
-
-                            }
-                            SharedPreferences sharedpreferences = getSharedPreferences(
-                                    MainActivity.My_preference, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            String urlTotal = sharedpreferences.getString(items.get(tabCategoryPosition).toLowerCase(), "");
-                            if(urlTotal.equals("")){
-                                urlTotal =  deepLinkUrl;
-                            }else {
-                                urlTotal += "_tokenizer_url:::search_app_" + deepLinkUrl;
-                            }
-                            editor.putString(items.get(tabCategoryPosition).toLowerCase(), urlTotal);
-                            editor.commit();
-                            goTabWebActivity(i, tabCategoryPosition, null);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void resetTrendingBg() {
-        trendingAll.setBackgroundColor(Color.BLACK);
-        trendingNews.setBackgroundColor(Color.BLACK);
-        trendingShopping.setBackgroundColor(Color.BLACK);
-        trendingTravel.setBackgroundColor(Color.BLACK);
-        trendingMovies.setBackgroundColor(Color.BLACK);
-        trendingRestaurent.setBackgroundColor(Color.BLACK);
     }
 }

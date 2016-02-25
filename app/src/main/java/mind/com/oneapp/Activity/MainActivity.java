@@ -1622,8 +1622,8 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
 
     public void togg(View view) {
       //  drawer.openDrawer(Gravity.LEFT);
-      //  home(null);
-        finish();
+        home(null);
+      //  finish();
     }
 
     @Override

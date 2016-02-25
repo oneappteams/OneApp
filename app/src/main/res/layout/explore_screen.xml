@@ -200,45 +200,87 @@
                 android:id="@+id/category_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
+                android:gravity="bottom"
 
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/category_ll_1"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:orientation="vertical">
                 <TextView
                     android:id="@+id/trending_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:gravity="center_horizontal"
-
+                    android:layout_marginBottom="10dp"
                     android:text="@string/trending_unselect_text"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="normal" />
+                <TextView
+                    android:id="@+id/trending_tv_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
 
+                    android:background="@color/white"
+                    android:layout_gravity="bottom"
+                     />
+</LinearLayout>
+            <LinearLayout
+                android:id="@+id/category_ll_2"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:orientation="vertical">
                 <TextView
                     android:id="@+id/category_tv"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:clickable="true"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center_horizontal"
                     android:onClick="category"
                     android:text="@string/category_unselect_text"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/trending_tv_line_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:visibility="invisible"
+                    android:background="@color/white"
+                    android:layout_gravity="bottom"
+                     />
             </LinearLayout>
 
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/trending_tv_line_3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:visibility="visible"
+
+                android:background="@color/black"
+android:layout_below="@+id/category_ll"
+                />
             <LinearLayout
                 android:id="@+id/trending_list_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:layout_above="@+id/trending_item_ll"
                 android:layout_below="@+id/category_ll"
-                android:background="@android:color/white"
+                android:background="#88000000"
                 android:orientation="vertical">
                 <!-- android:background="@android:color/transparent"-->
                 <ListView
@@ -266,7 +308,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:background="@color/welcomeoffertext"
+                    android:background="#333333"
                     android:clickable="true"
                     android:onClick="trendingOverAll"
                     android:padding="10dp"
@@ -329,7 +371,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/category_ll"
+                android:layout_marginTop="2dp"
                 android:gravity="center_vertical"
+                android:background="#88000000"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:weightSum="1">
@@ -376,6 +420,7 @@
         android:layout_margin="5dp"
         android:gravity="center|right"
         android:orientation="horizontal"
+        android:background="#88000000"
         android:padding="5dp"
         android:visibility="gone">
 
