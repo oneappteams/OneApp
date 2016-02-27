@@ -142,6 +142,7 @@
                 android:padding="5dp"
                 android:src="@drawable/share_icon_black" />
             <ImageView
+                android:id="@+id/home"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:clickable="true"

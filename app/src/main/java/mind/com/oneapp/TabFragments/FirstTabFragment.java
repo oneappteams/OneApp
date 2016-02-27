@@ -404,6 +404,15 @@ public class FirstTabFragment extends Fragment {
             mPager = (CustomViewPager) activity.findViewById(R.id.pager);
             tapRetryLinear = (LinearLayout) v.findViewById(R.id.tapRetryLinear);
             webViewPresent = (ObservableWebView) v.findViewById(R.id.webPresent);
+
+/*            ImageView home = (ImageView) activity.findViewById(R.id.home);
+            home.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startHomePage();
+                }
+            });*/
+
             WebSettings webSettingViewPresent = webViewPresent.getSettings();
             webSettingViewPresent.setUseWideViewPort(true);
 

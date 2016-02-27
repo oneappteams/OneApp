@@ -220,33 +220,8 @@ public class HomeActivity extends Activity {
             }
         });
 
-        // Basic Yozio initialization
-        //  Yozio.initialize(this);
-
-/*            SharedPreferences sharedpreferences = getSharedPreferences(
-                    MainActivity.My_preference, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean("HomeActivityFirst",true);
-            editor.commit();
-            try {
-
-                Intent intent = this.getIntent();
-                Uri data = intent.getData();
-                if (data != null) {
-                    String strData = data.toString();
-                    parseLink(strData);
-                } else {
-                    trending(null, 0);
-                }
-            } catch (Exception e) {
-
-            }*/
 
         try {
-
-        //    if(sharedpreferences.getBoolean("HomeActivityFirst",true)) {
-                /*editor.putBoolean("HomeActivityFirst",false);
-                editor.commit();*/
                 Intent intent = this.getIntent();
                 Uri data = intent.getData();
                 if (data != null) {
@@ -257,8 +232,6 @@ public class HomeActivity extends Activity {
                 }
           //  }
         } catch (Exception e) {
-
-
         }
 
 
@@ -275,21 +248,10 @@ public class HomeActivity extends Activity {
                 editor.commit();
             }
         });
-        //  Toast.makeText(getApplicationContext(), deepLinkCategory + "", Toast.LENGTH_SHORT).show();
     }
 
 
-    /* protected void onActivityResult(final int requestCode, final int resultCode,
-                                     final Intent data) {
-         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-             Toast.makeText(getApplicationContext(), accountName,
-                     Toast.LENGTH_LONG).show();
-         }
-     }*/
     public void goTabWebActivity(int position, int categoryPosition, String searchUrl) {
-        // String strName = null;
-        // i.putExtra("STRING_I_NEED", strName);
 
         sendData();
 
@@ -302,41 +264,8 @@ public class HomeActivity extends Activity {
         finish();
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        /*try {
-            SharedPreferences sharedpreferences = getSharedPreferences(
-                    MainActivity.My_preference, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-           if(sharedpreferences.getBoolean("HomeActivityFirst",true)) {
-               editor.putBoolean("HomeActivityFirst",false);
-               editor.commit();
-               Intent intent = this.getIntent();
-               Uri data = intent.getData();
-               if (data != null) {
-                   String strData = data.toString();
-                   parseLink(strData);
-               } else {
-                   trending(null, 0);
-               }
-           }
-        } catch (Exception e) {
 
 
-        }*/
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-/*        SharedPreferences sharedpreferences = getSharedPreferences(
-                MainActivity.My_preference, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putBoolean("HomeActivityFirst",false);
-                editor.commit();*/
-    }
 
     public void Skip(View view) {
 
@@ -387,11 +316,7 @@ public class HomeActivity extends Activity {
 
     public void searchCatOne(View view) {
         selectedTabSearch = 1;
-/*        if (view != null) {
-            TextView tabText = (TextView) view;
-            tabConent = tabText.getText().toString();
-            tabText.setText(Html.fromHtml("<u>" + tabConent + "<u>"));
-        }*/
+
         textCatOne.setText(Html.fromHtml("<u>" + textCatSOne + "<u>"));
         textCatTwo.setText(Html.fromHtml("" + textCatSTwo + ""));
         textCatThree.setText(Html.fromHtml("" + textCatSThree + ""));
@@ -469,11 +394,7 @@ public class HomeActivity extends Activity {
                 mViewHolder = (MyViewHolder) convertView.getTag();
             }
 
-            //String currentListData = getItem(position);
-
             mViewHolder.tvTitle.setText(myList.get(position));
-            // mViewHolder.tvTitle.setCompoundDrawablesWithIntrinsicBounds(myListIcons.get(position), 0, 0, 0);
-            //   mViewHolder.tvDesc.setText(currentListData.getDescription());
             mViewHolder.ivIcon.setImageResource(myListIcons.get(position));
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -495,7 +416,6 @@ public class HomeActivity extends Activity {
 
             public MyViewHolder(View item) {
                 tvTitle = (TextView) item.findViewById(R.id.tvTitle);
-                //  tvDesc = (TextView) item.findViewById(R.id.tvDesc);
                 ivIcon = (ImageView) item.findViewById(R.id.ivIcon);
             }
         }
@@ -504,12 +424,6 @@ public class HomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-/*        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);*/
-        //     finish();
-
     }
 
 
@@ -561,24 +475,16 @@ public class HomeActivity extends Activity {
                                 default:
                                     trendingOverAll(null);
                                     break;
-
                         }
-
                         try {
                             trengingLv.smoothScrollToPosition(sharedpreferences.getInt("trendingCatInnerPos", 0));
                         }catch (Exception e){
 
                         }
-                       // editor.commit();
                     }
                 } catch (Exception e) {
-
-
                 }
-
-
-                /*categoryTv.setPaintFlags(0);
-                treningTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);*/
+                //
                 introGvLl.setVisibility(View.GONE);
                 skipLl.setVisibility(View.GONE);
                 trendingListLl.setVisibility(View.VISIBLE);
@@ -603,21 +509,17 @@ public class HomeActivity extends Activity {
     public void category(View view) {
         treningTv.setEnabled(true);
         categoryTv.setEnabled(false);
-        /*categoryTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        treningTv.setPaintFlags(0);*/
         introGvLl.setVisibility(View.VISIBLE);
         skipLl.setVisibility(View.VISIBLE);
         trendingListLl.setVisibility(View.GONE);
         trendingItemLl.setVisibility(View.GONE);
         trendingTvLine.setVisibility(View.INVISIBLE);
         trendingTvLine2.setVisibility(View.VISIBLE);
-
     }
 
     public void trendingOverAll(View views) {
         try {
             resetTrendingBg();
-            // trendingAll.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
             trendingAll.setBackgroundColor(getResources().getColor(R.color.selectedtrend));
             trendingNews.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
             trendingShopping.setBackgroundColor(getResources().getColor(R.color.welcomeoffertext));
@@ -638,8 +540,10 @@ public class HomeActivity extends Activity {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putInt("trendingCatPos", 0);
             editor.commit();
-
-            //trengingLv.smoothScrollToPosition(sharedpreferences.getInt("trendingCatInnerPos",0));
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("class", this.getClass().getCanonicalName());
+            parameters.put("info-msg", "Trending All Clicked");
+            Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
         }catch (Exception e){
 
         }
@@ -669,6 +573,11 @@ public class HomeActivity extends Activity {
         editor.putInt("trendingCatPos",1);
         editor.commit();
 
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("class", this.getClass().getCanonicalName());
+        parameters.put("info-msg", "Trending News Clicked");
+        Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
+
     }
 
     public void trendingShoppingDeals(View view) {
@@ -693,6 +602,11 @@ public class HomeActivity extends Activity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putInt("trendingCatPos",2);
         editor.commit();
+
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("class", this.getClass().getCanonicalName());
+        parameters.put("info-msg", "Trending Shopping Clicked");
+        Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
     }
 
     public void trendingTravel(View view) {
@@ -718,6 +632,11 @@ public class HomeActivity extends Activity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putInt("trendingCatPos",3);
         editor.commit();
+
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("class", this.getClass().getCanonicalName());
+        parameters.put("info-msg", "Trending Travel Clicked");
+        Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
     }
 
     public void trendingMovies(View view) {
@@ -743,6 +662,11 @@ public class HomeActivity extends Activity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putInt("trendingCatPos",4);
         editor.commit();
+
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("class", this.getClass().getCanonicalName());
+        parameters.put("info-msg", "Trending Movies Clicked");
+        Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
     }
 
     public void trendingEatOrRestaurant(View view) {
@@ -761,6 +685,12 @@ public class HomeActivity extends Activity {
         trengingLv.setAdapter(trendingAdapter);
         if (trendingAdapter != null)
             trendingAdapter.notifyDataSetChanged();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                MainActivity.My_preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("trendingCatPos",5);
+        editor.commit();
     }
 
     private void processJson(JSONObject object, int trendCategoryPosition) {
@@ -784,17 +714,8 @@ public class HomeActivity extends Activity {
                 rowData.add(rowitem);
             }
             db.insertTrendingData(rowData);
-            //  trendingOverAll(null);
 
             try {
-              /*  Intent intent = this.getIntent();
-                Uri data = intent.getData();
-                if (data == null) {
-                    trendingOverAll(null);
-                }
-                else{*/
-
-
 
                 switch (trendCategoryPosition) {
                     case 0:
@@ -834,6 +755,10 @@ public class HomeActivity extends Activity {
 
     public void parseLink(String path) {
         try {
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("class", this.getClass().getCanonicalName());
+            parameters.put("info-msg", "Deeplinking URL from Notification Clicked, path = " + path);
+            Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
             String deepLinkCategory = "Home";
             String[] dataParts = path.split("/deeplinking/");
             String deepLinkCategoryParts = dataParts[1]; //idStr; //dataParts[1];
@@ -931,15 +856,14 @@ public class HomeActivity extends Activity {
                             SharedPreferences sharedpreferences = getSharedPreferences(
                                     MainActivity.My_preference, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
-                          //  String urlTotal = sharedpreferences.getString(items.get(tabCategoryPosition).toLowerCase(), "");
-                          //  if(urlTotal.equals("")){
-                            String    urlTotal =  deepLinkUrl;
-                           // }else {
-                              //  urlTotal += "_tokenizer_url:::search_app_" + deepLinkUrl;
-                            //}
                             editor.putString(items.get(tabCategoryPosition).toLowerCase(), deepLinkUrl);
                             editor.commit();
                             goTabWebActivity(i, tabCategoryPosition, null);
+
+                            parameters = new HashMap<String, String>();
+                            parameters.put("class", this.getClass().getCanonicalName());
+                            parameters.put("info-msg", "Trending Notification Clicked, Category = " + items.get(tabCategoryPosition).toLowerCase() +" And Tab Position = " + tabCategoryPosition);
+                            Flog.fi(HomeActivity.this, Utils.Event.VERBOSE, parameters);
                         }
                     }
                 }

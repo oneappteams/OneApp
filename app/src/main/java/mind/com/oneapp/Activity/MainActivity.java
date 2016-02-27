@@ -104,9 +104,9 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
     String shareUrl;
     String shareTabTitle;
     public boolean isFromFirstTab = false;
-/*    TimerTask hourlyTask;
-    Timer timer = null;
-    TimerTask shareTimer = null;*/
+    /*    TimerTask hourlyTask;
+        Timer timer = null;
+        TimerTask shareTimer = null;*/
     FirstTabFragment firstTabFragment;
     SecondTabFragment secondTabFragment;
     ThirdTabFragment thirdTabFragment;
@@ -212,7 +212,7 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
                 newPos = (int) savedInstanceState.getSerializable("tabPosition");
                 searchContent = (String) savedInstanceState.getSerializable("tabSearchText");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         if (categoryPosition != -1) {
@@ -1574,7 +1574,7 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
         startActivity(intent);
     }
 
-    public void closeAll(View view) {
+    public void closeAll(View views) {
 
         try {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1611,9 +1611,24 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
     }
 
     public void home(View view) {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+       /* Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
+        try {
+            if ((mAdapter.mFirstFragment) != null && mAdapter.mFirstFragment.isMenuVisible())
+                ((FirstTabFragment) mAdapter.mFirstFragment).startHomePage();
+            if ((mAdapter.mSecondFragment) != null && mAdapter.mSecondFragment.isMenuVisible())
+                ((SecondTabFragment) mAdapter.mSecondFragment).startHomePage();
+            if ((mAdapter.mThirdFragment) != null && mAdapter.mThirdFragment.isMenuVisible())
+                ((ThirdTabFragment) mAdapter.mThirdFragment).startHomePage();
+            if ((mAdapter.mFourthFragment) != null && mAdapter.mFourthFragment.isMenuVisible())
+                ((FourthTabFragment) mAdapter.mFourthFragment).startHomePage();
+            if ((mAdapter.mFifthFragment) != null && mAdapter.mFifthFragment.isMenuVisible())
+                ((FifthTabFragment) mAdapter.mFifthFragment).startHomePage();
+            if ((mAdapter.mSixthFragment) != null && mAdapter.mSixthFragment.isMenuVisible())
+                ((SixthTabFragment) mAdapter.mSixthFragment).startHomePage();
+        } catch (Exception e) {
+        }
     }
 
     public void refresh(View view) {
@@ -1621,9 +1636,14 @@ public class MainActivity extends FragmentActivity implements OnPageChangeListen
     }
 
     public void togg(View view) {
-      //  drawer.openDrawer(Gravity.LEFT);
-        home(null);
-      //  finish();
+        //  drawer.openDrawer(Gravity.LEFT);
+        //   home(null);
+        //  finish();
+        //   mAdapter.mFirstFragment.;
+
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
